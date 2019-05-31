@@ -103,7 +103,7 @@ public class WakeupPlugin extends CordovaPlugin {
 				ret=false;
 			}
 		} catch (JSONException e) {
-			PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, LOG_TAG + " error: invalid json");
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, LOG_TAG + " error: invalid json: " + e.getMessage());
 			pluginResult.setKeepCallback(true);
 			callbackContext.sendPluginResult(pluginResult);  
 			ret = false;
@@ -128,6 +128,11 @@ public class WakeupPlugin extends CordovaPlugin {
       e.printStackTrace();
     }
   }
+	private static void addOptionalBooleanExtra(Intent intent, String name,JSONObject data ){
+		if ( data.has(name)){
+			intent.putExtra(name, data.getBoolean(name));
+		}
+	}
 
 	@SuppressLint({ "SimpleDateFormat", "NewApi" })
 	protected static void setAlarms(Context context, JSONArray alarms, boolean cancelAlarms) throws JSONException{
@@ -155,11 +160,11 @@ public class WakeupPlugin extends CordovaPlugin {
 				Intent intent = new Intent(context, WakeupReceiver.class);
 				if(alarm.has("extra")){
 					intent.putExtra("extra", alarm.getJSONObject("extra").toString());
-					intent.putExtra("skipOnAwake", alarm.getBoolean("skipOnAwake"));
-					intent.putExtra("skipOnRunning", alarm.getBoolean("skipOnRunning"));
-					intent.putExtra("type", type);
-					intent.putExtra("startInBackground", alarm.getBoolean("startInBackground"));
 				}
+				intent.putExtra("type", type);
+				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
 				
 				setNotification(context, type, alarmDate, intent, ID_ONETIME_OFFSET);
 				
@@ -171,13 +176,13 @@ public class WakeupPlugin extends CordovaPlugin {
 					Intent intent = new Intent(context, WakeupReceiver.class);
 					if(alarm.has("extra")){
 						intent.putExtra("extra", alarm.getJSONObject("extra").toString());
-						intent.putExtra("type", type);
-						intent.putExtra("time", time.toString());
-						intent.putExtra("day", days.getString(j));
-						intent.putExtra("skipOnAwake", alarm.getBoolean("skipOnAwake"));
-						intent.putExtra("skipOnRunning", alarm.getBoolean("skipOnRunning"));
-						intent.putExtra("startInBackground", alarm.getBoolean("startInBackground"));
 					}
+					intent.putExtra("type", type);
+					intent.putExtra("time", time.toString());
+					intent.putExtra("day", days.getString(j));
+					this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+					this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+					this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
 					
 					setNotification(context, type, alarmDate, intent, ID_DAYLIST_OFFSET + daysOfWeek.get(days.getString(j)));
 				}
@@ -187,11 +192,11 @@ public class WakeupPlugin extends CordovaPlugin {
 				Intent intent = new Intent(context, WakeupReceiver.class);
 				if(alarm.has("extra")){
 					intent.putExtra("extra", alarm.getJSONObject("extra").toString());
-					intent.putExtra("type", type);
-					intent.putExtra("skipOnAwake", alarm.getBoolean("skipOnAwake"));
-					intent.putExtra("skipOnRunning", alarm.getBoolean("skipOnRunning"));
-					intent.putExtra("startInBackground", alarm.getBoolean("startInBackground"));
 				}
+				intent.putExtra("type", type);
+				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
 				setNotification(context, type, alarmDate, intent, ID_SNOOZE_OFFSET);
 			} else if ( type.equals("repeating")) {
 				Calendar alarmDate = getRepeatingAlertDate(time);
@@ -199,10 +204,11 @@ public class WakeupPlugin extends CordovaPlugin {
 				if(alarm.has("extra")){
 					intent.putExtra("extra", alarm.getJSONObject("extra").toString());
 					intent.putExtra("type", type);
-					intent.putExtra("skipOnAwake", alarm.getBoolean("skipOnAwake"));
-					intent.putExtra("skipOnRunning", alarm.getBoolean("skipOnRunning"));
-					intent.putExtra("startInBackground", alarm.getBoolean("startInBackground"));
 				}
+				intent.putExtra("type", type);
+				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
 
 				setNotification(context, type, alarmDate, intent, ID_REPEAT_OFFSET);
 			}
