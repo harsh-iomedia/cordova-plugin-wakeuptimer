@@ -315,6 +315,12 @@ public class WakeupPlugin extends CordovaPlugin {
 			return calendar;
 		}
 		Calendar now = new GregorianCalendar(defaultz);
+		if ( time.has("relativeSeconds")){
+			int seconds = time.getInt("relativeSeconds");
+			now.setTime(new Date());
+			now.add(Calendar.SECOND, seconds);
+			return now;
+		}
 		now.setTime(new Date());
 		calendar.setTime(new Date());
 
