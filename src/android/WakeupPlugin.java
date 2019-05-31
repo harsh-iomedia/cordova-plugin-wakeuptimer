@@ -300,6 +300,12 @@ public class WakeupPlugin extends CordovaPlugin {
 	protected static Calendar getOneTimeAlarmDate( JSONObject time) throws JSONException {
 		TimeZone defaultz = TimeZone.getDefault();
 		Calendar calendar = new GregorianCalendar(defaultz);
+		if ( time.has("date")){
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = sdf.parse(time.getString("date"));
+			calendar.setTime(date);
+			return calendar;
+		}
 		Calendar now = new GregorianCalendar(defaultz);
 		now.setTime(new Date());
 		calendar.setTime(new Date());
