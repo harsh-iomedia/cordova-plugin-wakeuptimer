@@ -1,6 +1,7 @@
 package org.nypr.cordova.wakeupplugin;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -107,6 +108,11 @@ public class WakeupPlugin extends CordovaPlugin {
 			pluginResult.setKeepCallback(true);
 			callbackContext.sendPluginResult(pluginResult);  
 			ret = false;
+		} catch (ParseException e) {
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, LOG_TAG + " error: invalid date: " + e.getMessage());
+			pluginResult.setKeepCallback(true);
+			callbackContext.sendPluginResult(pluginResult);  
+			ret = false;
 		} catch (Exception e) {
 			PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, LOG_TAG + " error: " + e.getMessage());
 			pluginResult.setKeepCallback(true);
@@ -126,16 +132,18 @@ public class WakeupPlugin extends CordovaPlugin {
       WakeupPlugin.setAlarms(context, alarms, true);
     } catch (JSONException e) {
       e.printStackTrace();
+    } catch (ParseException e) {
+      e.printStackTrace();
     }
   }
-	private static void addOptionalBooleanExtra(Intent intent, String name,JSONObject data ){
+	private static void addOptionalBooleanExtra(Intent intent, String name,JSONObject data ) throws JSONException {
 		if ( data.has(name)){
 			intent.putExtra(name, data.getBoolean(name));
 		}
 	}
 
 	@SuppressLint({ "SimpleDateFormat", "NewApi" })
-	protected static void setAlarms(Context context, JSONArray alarms, boolean cancelAlarms) throws JSONException{
+	protected static void setAlarms(Context context, JSONArray alarms, boolean cancelAlarms) throws JSONException, ParseException{
 
 		if (cancelAlarms) {
 			cancelAlarms(context);
@@ -162,9 +170,9 @@ public class WakeupPlugin extends CordovaPlugin {
 					intent.putExtra("extra", alarm.getJSONObject("extra").toString());
 				}
 				intent.putExtra("type", type);
-				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
-				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
-				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
+				addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				addOptionalBooleanExtra(intent, "startInBackground", alarm);
 				
 				setNotification(context, type, alarmDate, intent, ID_ONETIME_OFFSET);
 				
@@ -180,9 +188,9 @@ public class WakeupPlugin extends CordovaPlugin {
 					intent.putExtra("type", type);
 					intent.putExtra("time", time.toString());
 					intent.putExtra("day", days.getString(j));
-					this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
-					this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
-					this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
+					addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+					addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+					addOptionalBooleanExtra(intent, "startInBackground", alarm);
 					
 					setNotification(context, type, alarmDate, intent, ID_DAYLIST_OFFSET + daysOfWeek.get(days.getString(j)));
 				}
@@ -194,9 +202,9 @@ public class WakeupPlugin extends CordovaPlugin {
 					intent.putExtra("extra", alarm.getJSONObject("extra").toString());
 				}
 				intent.putExtra("type", type);
-				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
-				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
-				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
+				addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				addOptionalBooleanExtra(intent, "startInBackground", alarm);
 				setNotification(context, type, alarmDate, intent, ID_SNOOZE_OFFSET);
 			} else if ( type.equals("repeating")) {
 				Calendar alarmDate = getRepeatingAlertDate(time);
@@ -206,9 +214,9 @@ public class WakeupPlugin extends CordovaPlugin {
 					intent.putExtra("type", type);
 				}
 				intent.putExtra("type", type);
-				this.addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
-				this.addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
-				this.addOptionalBooleanExtra(intent, "startInBackground", alarm);
+				addOptionalBooleanExtra(intent, "skipOnAwake", alarm);
+				addOptionalBooleanExtra(intent, "skipOnRunning", alarm);
+				addOptionalBooleanExtra(intent, "startInBackground", alarm);
 
 				setNotification(context, type, alarmDate, intent, ID_REPEAT_OFFSET);
 			}
@@ -297,7 +305,7 @@ public class WakeupPlugin extends CordovaPlugin {
 		return calendar;
 	}
 
-	protected static Calendar getOneTimeAlarmDate( JSONObject time) throws JSONException {
+	protected static Calendar getOneTimeAlarmDate( JSONObject time) throws JSONException, ParseException {
 		TimeZone defaultz = TimeZone.getDefault();
 		Calendar calendar = new GregorianCalendar(defaultz);
 		if ( time.has("date")){
