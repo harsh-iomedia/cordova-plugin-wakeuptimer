@@ -18,7 +18,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WakeupPlugin" >
-                <param name="android-package" value="org.nypr.cordova.wakeupplugin.WakeupPlugin"/>
+                <param name="android-package" value="org.cordova.alaramclockplugin.WakeupPlugin"/>
                 <param name="onload" value="true" />
             </feature>
         </config-file>
@@ -29,17 +29,17 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <receiver android:name="org.nypr.cordova.wakeupplugin.WakeupReceiver" />
-            <receiver android:name="org.nypr.cordova.wakeupplugin.WakeupBootReceiver">
+            <receiver android:name="org.cordova.alaramclockplugin.WakeupReceiver" />
+            <receiver android:name="org.cordova.alaramclockplugin.WakeupBootReceiver">
               <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
               </intent-filter>
             </receiver>
         </config-file>
 
-        <source-file src="src/android/WakeupPlugin.java" target-dir="src/org/nypr/cordova/wakeupplugin/" />
-        <source-file src="src/android/WakeupReceiver.java" target-dir="src/org/nypr/cordova/wakeupplugin/" />
-        <source-file src="src/android/WakeupBootReceiver.java" target-dir="src/org/nypr/cordova/wakeupplugin/" />
+        <source-file src="src/android/WakeupPlugin.java" target-dir="src/org/cordova/alaramclockplugin/" />
+        <source-file src="src/android/WakeupReceiver.java" target-dir="src/org/cordova/alaramclockplugin/" />
+        <source-file src="src/android/WakeupBootReceiver.java" target-dir="src/org/cordova/alaramclockplugin/" />
     </platform>
 
     <!-- ios -->
