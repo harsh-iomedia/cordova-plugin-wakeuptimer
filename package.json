@@ -1,17 +1,12 @@
 {
-  "name": "org.nypr.cordova.wakeupplugin",
-  "version": "0.4.121",
-  "displayName": "WakeupTimer",
+  "name": "cordova-plugin-alarmclock",
+  "version": "0.0.1",
   "cordova": {
+    "id": "cordova-plugin-alarmclock",
     "platforms": [
       "android",
       "ios"
-    ],
-    "plugins": {
-    }
-  },
-  "dependencies": {
-    "cordova-android": "^6.3.0"
+    ]
   }
 }
 
