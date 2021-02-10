@@ -29,8 +29,8 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <receiver android:name="org.cordova.alaramclockplugin.WakeupReceiver" />
-            <receiver android:name="org.cordova.alaramclockplugin.WakeupBootReceiver">
+            <receiver android:name="org.cordova.alarmclockplugin.WakeupReceiver" />
+            <receiver android:name="org.cordova.alarmclockplugin.WakeupBootReceiver">
               <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
               </intent-filter>
